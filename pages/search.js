@@ -1,17 +1,21 @@
 import {  Col, Row, Button, Form } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
-
 import { useRouter } from 'next/router';
-
+import { searchHistoryAtom } from '../store.js';
+import { useAtom} from 'jotai'
 
 export default function AdvancedSearch() {
+
+  const [searchHistory, setSearchHistory] = useAtom(searchHistoryAtom)
 
   const router = useRouter();
 
   const { register, handleSubmit, formState: {errors} } = useForm(); // no default values for now
 
 
-  function submitForm(data){
+    function submitForm(data) {
+        
+
     let queryString = '';
 
     queryString += `${data.searchBy}=true`;
@@ -25,7 +29,9 @@ export default function AdvancedSearch() {
     queryString += `&isOnView=${data.isOnView}`;
     queryString += `&isHighlight=${data.isHighlight}`;
 
-    queryString += `&q=${data.q}`
+        queryString += `&q=${data.q}`
+
+        setSearchHistory(current => [...current, queryString]);
 
     router.push(`/artwork?${queryString}`);
 
